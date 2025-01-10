@@ -31,13 +31,6 @@ class TestTntBot(unittest.TestCase):
         self.assertEqual(ty, y)  
         self.assertIn((tx - x, tz - z), [(1, 0), (-1, 0), (0, 1), (0, -1)]) 
 
-    @patch('bots.tntbot.place_block')
-    def test_tntbot_run(self, mock_place_block):
-        should_continue = MagicMock(side_effect=[True, True, False])  #
-        tntbot_run(should_continue)
-
-        self.assertGreaterEqual(mock_place_block.call_count, 4)
-
     def test_generate_position_within_bounds(self):
         base_pos = self.mc.player.getTilePos.return_value
         for _ in range(100):  

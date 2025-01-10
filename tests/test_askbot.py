@@ -5,6 +5,7 @@ from bots.askbot import AskBot
 
 class TestAskBot(unittest.TestCase):
 
+    
     def setUp(self):
 
         self.mc = MagicMock()
