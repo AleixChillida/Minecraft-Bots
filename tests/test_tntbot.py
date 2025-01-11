@@ -34,14 +34,12 @@ class TestTntBot(unittest.TestCase):
         self.assertIn((tx - x, tz - z), [(1, 0), (-1, 0), (0, 1), (0, -1)])
 
     def test_generate_position_within_bounds(self):
-        # Definir los valores para las coordenadas
+
         base_pos = MagicMock(x=0, y=64, z=0)
         self.mock_mc_instance.player.getTilePos.return_value = base_pos
         
-        # Generar una posición TNT
         tnt_pos = generate_single_tnt_position(base_pos)
         
-        # Verificar que las coordenadas x y z estén dentro del rango [-5, 5]
         self.assertTrue(-5 <= tnt_pos[0] <= 5)
-        self.assertEqual(tnt_pos[1], 64)  # Y debe ser igual a la coordenada inicial
+        self.assertEqual(tnt_pos[1], 64)  
         self.assertTrue(-5 <= tnt_pos[2] <= 5)
