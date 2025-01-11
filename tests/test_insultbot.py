@@ -4,30 +4,30 @@ from bots.insultbot import InsultBot
 
 class TestInsultBot(unittest.TestCase):
 
-    def setUp(self):
-        # Mockea el objeto Minecraft
-        self.mc = MagicMock()
-        self.bot = InsultBot(self.mc)
+    @patch('mcpi.minecraft.Minecraft.create')
+    def setUp(self, mock_minecraft_create):
+        self.mock_mc_instance = MagicMock()
+        mock_minecraft_create.return_value = self.mock_mc_instance
 
-    @patch('bots.insultbot.random.choice')
-    def test_insult_random(self, mock_random_choice):
-        mock_random_choice.return_value = "Eres malisimo"
-        self.bot.insult_random()
-        self.mc.postToChat.assert_any_call("Eres malisimo")
+        self.bot = InsultBot(self.mock_mc_instance)
+
+    def test_insult_random(self):
+        with patch('bots.insultbot.random.choice', return_value="Eres malísimo"):
+            self.bot.insult_random()
+            self.mock_mc_instance.postToChat.assert_any_call("Eres malísimo")
 
     @patch('bots.insultbot.random.choice')
     def test_insult_personalized(self, mock_random_choice):
         mock_random_choice.return_value = "Eres malisimo"
         player_name = "Steve"
         self.bot.insult_personalized(player_name)
-        self.mc.postToChat.assert_any_call(f"{player_name}, Eres malisimo")
+        self.mock_mc_instance.postToChat.assert_any_call(f"{player_name}, Eres malisimo")
 
     def test_insult_funny(self):
         self.bot.insult_funny()
-        self.mc.postToChat.assert_any_call("Un bebe juega mejor que tu")
+        self.mock_mc_instance.postToChat.assert_any_call("Un bebe juega mejor que tu")
 
     def test_bot_initialization(self):
-        # Verifica que la lista de insultos esté correctamente inicializada
         expected_insults = [
             "Eres malisimo",
             "Aprende a construir",
@@ -36,6 +36,3 @@ class TestInsultBot(unittest.TestCase):
             "Así es como juegas Minecraft? Vergonzoso.",
         ]
         self.assertEqual(self.bot.INSULTS, expected_insults)
-
-if __name__ == '__main__':
-    unittest.main()
