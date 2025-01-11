@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from bots.tntbot import activate_single_tnt, generate_single_tnt_position, place_block, tntbot_run
+from bots.tntbot import activate_single_tnt, generate_single_tnt_position, place_block
 
 class TestTntBot(unittest.TestCase):
 
     def setUp(self):
+        # Mockea el objeto Minecraft
         self.mc = MagicMock()
         self.mc.player.getTilePos.return_value = MagicMock(x=0, y=64, z=0)
 
@@ -28,12 +29,12 @@ class TestTntBot(unittest.TestCase):
         x, y, z = tnt_position
         tx, ty, tz = torch_position
 
-        self.assertEqual(ty, y)  
-        self.assertIn((tx - x, tz - z), [(1, 0), (-1, 0), (0, 1), (0, -1)]) 
+        self.assertEqual(ty, y)
+        self.assertIn((tx - x, tz - z), [(1, 0), (-1, 0), (0, 1), (0, -1)])
 
     def test_generate_position_within_bounds(self):
         base_pos = self.mc.player.getTilePos.return_value
-        for _ in range(100):  
+        for _ in range(100):
             tnt_pos = generate_single_tnt_position(base_pos)
             self.assertTrue(-5 <= tnt_pos[0] <= 5)
             self.assertTrue(-5 <= tnt_pos[2] <= 5)
